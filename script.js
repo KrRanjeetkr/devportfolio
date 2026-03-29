@@ -10,6 +10,8 @@ const contactForm = document.getElementById("contact-form");
 const formStatus = document.getElementById("form-status");
 const yearElement = document.getElementById("current-year");
 const THEME_STORAGE_KEY = "rk-theme";
+const CONTACT_EMAIL = "techranjitad@gmail.com";
+const CONTACT_API_URL = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 let activeSectionId = null;
 
 const getScrollOffset = () => {
@@ -200,13 +202,11 @@ if (themeToggle) {
 }
 
 if (contactForm && formStatus) {
-  contactForm.addEventListener("submit", (event) => {
+  contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     const requiredFields = contactForm.querySelectorAll("[required]");
-    const hasEmptyField = Array.from(requiredFields).some(
-      (field) => !field.value.trim()
-    );
+    const hasEmptyField = Array.from(requiredFields).some((field) => !field.value.trim());
 
     if (hasEmptyField) {
       formStatus.textContent = "Please fill in all fields before sending your message.";
@@ -214,11 +214,71 @@ if (contactForm && formStatus) {
       return;
     }
 
-    const name = contactForm.querySelector("#name");
-    const senderName = name && name.value.trim() ? name.value.trim() : "there";
+    const nameField = contactForm.querySelector("#name");
+    const emailField = contactForm.querySelector("#email");
+    const messageField = contactForm.querySelector("#message");
+    const submitButton = contactForm.querySelector('button[type="submit"]');
 
-    formStatus.textContent = `Thanks ${senderName}, your message is captured in this demo UI.`;
+    const senderName = nameField && nameField.value.trim() ? nameField.value.trim() : "there";
+    const senderEmail = emailField && emailField.value.trim() ? emailField.value.trim() : "";
+    const senderMessage = messageField && messageField.value.trim() ? messageField.value.trim() : "";
+
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+    }
+
+    formStatus.textContent = "Sending your message...";
     formStatus.classList.remove("error");
-    contactForm.reset();
+
+    try {
+      const response = await fetch(CONTACT_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name: senderName,
+          email: senderEmail,
+          message: senderMessage,
+          _subject: `Portfolio Contact: ${senderName}`,
+          _template: "table",
+          _captcha: "false",
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error("Form submission failed");
+      }
+
+      if (result.success === "true" || result.success === true) {
+        formStatus.textContent = `Thanks ${senderName}, your message was sent successfully.`;
+        formStatus.classList.remove("error");
+        contactForm.reset();
+      } else {
+        const responseMessage = String(result.message || "").toLowerCase();
+        if (responseMessage.includes("web server")) {
+          formStatus.textContent =
+            "FormSubmit requires a web server. Open this site via http://localhost (not file://) and try again.";
+        } else if (responseMessage.includes("activate")) {
+          formStatus.textContent =
+            "Please activate FormSubmit from the verification email sent to techranjitad@gmail.com, then submit again.";
+        } else {
+          formStatus.textContent = result.message || "Message could not be sent right now. Please try again.";
+        }
+        formStatus.classList.add("error");
+      }
+    } catch (error) {
+      formStatus.textContent =
+        "Network issue while sending. Please ensure internet connection and open site via a local web server.";
+      formStatus.classList.add("error");
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = "Send Message";
+      }
+    }
   });
 }

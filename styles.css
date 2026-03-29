@@ -804,6 +804,12 @@ h1 {
   color: #c2410c;
 }
 
+.contact-form button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .site-footer {
   border-top: 1px solid var(--line);
   background: var(--footer-bg);
