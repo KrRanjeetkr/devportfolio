@@ -14,6 +14,14 @@ const CONTACT_EMAIL = "techranjitad@gmail.com";
 const CONTACT_API_URL = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 let activeSectionId = null;
 
+const parseJsonSafe = async (response) => {
+  try {
+    return await response.json();
+  } catch (error) {
+    return {};
+  }
+};
+
 const getScrollOffset = () => {
   const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
   return headerHeight + 12;
@@ -248,23 +256,24 @@ if (contactForm && formStatus) {
         }),
       });
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error("Form submission failed");
-      }
+      const result = await parseJsonSafe(response);
+      const responseMessage = String(result.message || "").toLowerCase();
+      const isSuccess = response.ok && (result.success === "true" || result.success === true);
 
-      if (result.success === "true" || result.success === true) {
-        formStatus.textContent = `Thanks ${senderName}, your message was sent successfully.`;
+      if (isSuccess) {
+        formStatus.textContent = "Thank you. Your message has been sent successfully.";
         formStatus.classList.remove("error");
         contactForm.reset();
       } else {
-        const responseMessage = String(result.message || "").toLowerCase();
         if (responseMessage.includes("web server")) {
           formStatus.textContent =
-            "FormSubmit requires a web server. Open this site via http://localhost (not file://) and try again.";
-        } else if (responseMessage.includes("activate")) {
+            "FormSubmit requires a web server. Please open this site via http://localhost (not file://) and try again.";
+        } else if (
+          responseMessage.includes("activate") ||
+          responseMessage.includes("activation")
+        ) {
           formStatus.textContent =
-            "Please activate FormSubmit from the verification email sent to techranjitad@gmail.com, then submit again.";
+            "Your form is not activated yet. Please open the verification email sent to techranjitad@gmail.com, click 'Activate Form', and submit again.";
         } else {
           formStatus.textContent = result.message || "Message could not be sent right now. Please try again.";
         }
