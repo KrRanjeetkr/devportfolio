@@ -34,7 +34,7 @@
   >
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="theme-dark">
   <div class="bg-glow bg-glow-one" aria-hidden="true"></div>
   <div class="bg-glow bg-glow-two" aria-hidden="true"></div>
 
@@ -49,8 +49,8 @@
         <a href="#contact">Contact</a>
       </nav>
       <div class="nav-actions">
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">
-          Dark Mode
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="true">
+          Light Mode
         </button>
         <button class="menu-toggle" id="menu-toggle" aria-controls="main-nav" aria-expanded="false">
           Menu
@@ -201,39 +201,100 @@
     <section class="section section-soft" id="services">
       <div class="container">
         <header class="section-head reveal">
-          <p class="eyebrow">Skills / Tech Stack</p>
-          <h2>Tools and Technologies I Use to Build Apps</h2>
+          <p class="eyebrow">Services</p>
+          <h2>Development and Design Services</h2>
           <p class="section-subcopy">
-            From UI implementation to backend-connected features, I combine modern mobile frameworks
-            and proven architecture patterns to deliver reliable and scalable applications.
+            End-to-end services for mobile and web products, from planning and interface design
+            to clean development and production-ready delivery.
           </p>
         </header>
-        <div class="skills-grid">
-          <article class="skill-card reveal">
-            <h3>Core Development</h3>
+        <div class="skills-grid services-grid">
+          <article class="skill-card service-card reveal">
+            <span class="service-aura" aria-hidden="true"></span>
+            <div class="service-title-row">
+              <span class="service-index" aria-hidden="true">01</span>
+              <h3>Mobile Development &amp; Design</h3>
+            </div>
+            <p class="service-summary">
+              End-to-end Android and iOS app delivery with fast performance, clean UI structure,
+              and reliable backend integration.
+            </p>
+            <ul class="service-points">
+              <li>Flutter and native mobile development</li>
+              <li>Modern UI patterns and interaction polish</li>
+              <li>Release-ready optimization and scaling</li>
+            </ul>
             <div class="chip-wrap">
-              <span>Java</span>
-              <span>Kotlin</span>
+              <span>Android</span>
+              <span>iOS</span>
               <span>Flutter</span>
-              <span>Android SDK</span>
+              <span>App Design</span>
             </div>
           </article>
-          <article class="skill-card reveal">
-            <h3>Architecture and Performance</h3>
+          <article class="skill-card service-card reveal">
+            <span class="service-aura" aria-hidden="true"></span>
+            <div class="service-title-row">
+              <span class="service-index" aria-hidden="true">02</span>
+              <h3>Web Development</h3>
+            </div>
+            <p class="service-summary">
+              Professional websites and web applications built for speed, clarity, and business growth
+              across desktop and mobile devices.
+            </p>
+            <ul class="service-points">
+              <li>Responsive website implementation</li>
+              <li>Custom business and product pages</li>
+              <li>API-connected dynamic functionality</li>
+            </ul>
             <div class="chip-wrap">
-              <span>MVVM</span>
-              <span>Clean Architecture</span>
-              <span>State Management</span>
-              <span>App Optimization</span>
+              <span>Responsive Web</span>
+              <span>Landing Pages</span>
+              <span>Web Apps</span>
+              <span>API Integration</span>
             </div>
           </article>
-          <article class="skill-card reveal">
-            <h3>Integration and Backend</h3>
+          <article class="skill-card service-card reveal">
+            <span class="service-aura" aria-hidden="true"></span>
+            <div class="service-title-row">
+              <span class="service-index" aria-hidden="true">03</span>
+              <h3>UI/UX Design</h3>
+            </div>
+            <p class="service-summary">
+              User-focused interface design that balances visual quality, usability, and conversion-driven
+              product flow.
+            </p>
+            <ul class="service-points">
+              <li>User journeys, flows, and wireframes</li>
+              <li>Visual hierarchy and design consistency</li>
+              <li>Usability improvements for engagement</li>
+            </ul>
             <div class="chip-wrap">
-              <span>Retrofit</span>
-              <span>REST APIs</span>
-              <span>Firebase</span>
-              <span>Authentication</span>
+              <span>User Flow</span>
+              <span>Wireframes</span>
+              <span>Visual Design</span>
+              <span>UX Strategy</span>
+            </div>
+          </article>
+          <article class="skill-card service-card reveal">
+            <span class="service-aura" aria-hidden="true"></span>
+            <div class="service-title-row">
+              <span class="service-index" aria-hidden="true">04</span>
+              <h3>Frontend Development</h3>
+            </div>
+            <p class="service-summary">
+              Pixel-accurate frontend implementation with smooth interactions and clean component structure
+              for maintainable products.
+            </p>
+            <ul class="service-points">
+              <li>Semantic and accessible markup</li>
+              <li>Reusable CSS architecture and styling</li>
+              <li>Interactive UI with JavaScript behavior</li>
+            </ul>
+            <div class="chip-wrap">
+              <span>HTML</span>
+              <span>CSS</span>
+              <span>JavaScript</span>
+              <span>Interactive UI</span>
             </div>
           </article>
         </div>
@@ -333,10 +394,10 @@
             Have an app idea? I&apos;m just a message away. Let&apos;s make it happen!
           </p>
           <div class="contact-links">
-            <a href="mailto:techranjitad@gmail.com">Email: techranjitad@gmail.com</a>
-            <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://wa.me/910000000000" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="mailto:techranjitad@gmail.com" id="contact-email-link">Email: techranjitad@gmail.com</a>
+            <a href="https://www.linkedin.com/in/ranjeet-android-ios/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/KrRanjeetkr" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://wa.me/6203381713" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           </div>
           <div class="contact-ctas">
             <a class="btn btn-ghost" href="mailto:techranjitad@gmail.com?subject=Hiring%20Inquiry">Hire Me</a>
@@ -351,6 +412,17 @@
           <label for="email">Email</label>
           <input id="email" name="email" type="email" placeholder="you@example.com" required>
 
+          <label for="mobile">Mobile</label>
+          <input
+            id="mobile"
+            name="mobile"
+            type="tel"
+            inputmode="tel"
+            autocomplete="tel"
+            placeholder="+91 9876543210"
+            required
+          >
+
           <label for="message">Message</label>
           <textarea id="message" name="message" rows="5" placeholder="Tell me about your requirement..." required></textarea>
 
@@ -358,7 +430,7 @@
             <a class="btn btn-ghost" href="mailto:techranjitad@gmail.com?subject=Hiring%20Inquiry">Hire Me</a>
             <button class="btn btn-primary" type="submit">Send Message</button>
           </div>
-          <p class="form-note">Messages from this form are sent to techranjitad@gmail.com. Please run the site on a local server, activate FormSubmit once via email, and check your Spam/Promotions folder.</p>
+          <!-- <p class="form-note">Messages from this form are sent to techranjitad@gmail.com. Please run the site on a local server, activate FormSubmit once via email, and check your Spam/Promotions folder.</p> -->
           <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         </form>
       </div>
@@ -369,9 +441,9 @@
     <div class="container footer-content">
       <p>&copy; <span id="current-year"></span> Ranjeet Kumar. All rights reserved.</p>
       <div class="footer-links">
-        <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <a href="https://wa.me/910000000000" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <a href="https://www.linkedin.com/in/ranjeet-android-ios/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://github.com/KrRanjeetkr" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://wa.me/6203381713" target="_blank" rel="noopener noreferrer">WhatsApp</a>
       </div>
       <nav class="footer-nav" aria-label="Quick Navigation">
         <a href="#home">Home</a>

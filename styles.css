@@ -34,6 +34,11 @@
   --nav-hover-bg: rgba(15, 118, 110, 0.11);
   --footer-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(241, 245, 249, 0.75) 100%);
   --contact-shell-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  --service-card-bg:
+    linear-gradient(155deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 250, 255, 0.9) 52%, rgba(239, 246, 255, 0.86) 100%);
+  --service-glow: rgba(15, 118, 110, 0.2);
+  --service-ring: rgba(15, 118, 110, 0.28);
+  --service-hover-shadow: 0 26px 44px rgba(15, 23, 42, 0.15);
   --scroll-offset: 92px;
 }
 
@@ -69,6 +74,11 @@ body.theme-dark {
   --nav-hover-bg: rgba(20, 184, 166, 0.2);
   --footer-bg: linear-gradient(180deg, rgba(10, 18, 32, 0.4) 0%, rgba(8, 14, 24, 0.86) 100%);
   --contact-shell-bg: linear-gradient(135deg, rgba(15, 23, 42, 0.45), rgba(8, 14, 24, 0.72));
+  --service-card-bg:
+    linear-gradient(155deg, rgba(17, 27, 45, 0.95) 0%, rgba(12, 20, 35, 0.92) 54%, rgba(8, 14, 24, 0.94) 100%);
+  --service-glow: rgba(20, 184, 166, 0.24);
+  --service-ring: rgba(45, 212, 191, 0.36);
+  --service-hover-shadow: 0 30px 48px rgba(2, 6, 23, 0.58);
 }
 
 * {
@@ -534,7 +544,7 @@ h1 {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 }
 
@@ -569,6 +579,139 @@ h1 {
   padding: 0.38rem 0.7rem;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.services-grid {
+  gap: 1.05rem;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-height: 360px;
+  background: var(--service-card-bg);
+  border-color: var(--service-ring);
+  transition:
+    transform 260ms var(--ease),
+    box-shadow 260ms var(--ease),
+    border-color 260ms var(--ease);
+}
+
+.service-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 36%, rgba(255, 255, 255, 0.3) 50%, transparent 64%);
+  transform: translateX(-135%) skewX(-20deg);
+  transition: transform 900ms var(--ease);
+  pointer-events: none;
+}
+
+body.theme-dark .service-card::after {
+  background: linear-gradient(120deg, transparent 36%, rgba(148, 163, 184, 0.26) 50%, transparent 64%);
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--service-ring);
+  box-shadow: var(--service-hover-shadow);
+}
+
+.service-card:hover::after {
+  transform: translateX(135%) skewX(-20deg);
+}
+
+.service-aura {
+  position: absolute;
+  right: -2.4rem;
+  top: -2.4rem;
+  width: 9.6rem;
+  height: 9.6rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--service-glow) 0%, transparent 70%);
+  pointer-events: none;
+  animation: servicePulse 6s ease-in-out infinite;
+}
+
+.service-card:nth-child(2) .service-aura {
+  animation-delay: 0.9s;
+}
+
+.service-card:nth-child(3) .service-aura {
+  animation-delay: 1.8s;
+}
+
+.service-card:nth-child(4) .service-aura {
+  animation-delay: 2.7s;
+}
+
+.service-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.68rem;
+}
+
+.service-index {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.62rem;
+  font-family: "Sora", "Trebuchet MS", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  background: linear-gradient(140deg, var(--primary), var(--accent));
+  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.26);
+  transition: transform 260ms var(--ease), box-shadow 260ms var(--ease);
+}
+
+body.theme-dark .service-index {
+  box-shadow: 0 12px 24px rgba(20, 184, 166, 0.24);
+}
+
+.service-card:hover .service-index {
+  transform: translateY(-2px) rotate(-4deg);
+}
+
+.service-card h3 {
+  font-size: 1.03rem;
+  line-height: 1.35;
+}
+
+.service-summary {
+  margin: 0;
+  min-height: 4.6rem;
+  color: var(--ink-muted);
+  line-height: 1.64;
+  font-size: 0.9rem;
+}
+
+.service-points {
+  margin: 0;
+  padding-left: 1.02rem;
+  display: grid;
+  gap: 0.34rem;
+  color: var(--ink);
+  line-height: 1.5;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.service-points li::marker {
+  color: var(--primary);
+}
+
+.service-card .chip-wrap {
+  margin-top: auto;
+  padding-top: 0.72rem;
+  border-top: 1px solid var(--line);
+}
+
+.service-card .chip-wrap span {
+  font-size: 0.74rem;
 }
 
 .projects-grid {
@@ -882,6 +1025,18 @@ h1 {
   }
 }
 
+@keyframes servicePulse {
+  0%,
+  100% {
+    transform: scale(0.84);
+    opacity: 0.36;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.62;
+  }
+}
+
 @media (max-width: 920px) {
   #main-nav {
     gap: 0.55rem;
@@ -911,6 +1066,10 @@ h1 {
 
   .hero-metrics {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .service-summary {
+    min-height: auto;
   }
 }
 
@@ -967,5 +1126,25 @@ h1 {
 
   .section {
     padding: 4.8rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card,
+  .service-index,
+  .service-card::after {
+    transition: none;
+  }
+
+  .service-card:hover {
+    transform: none;
+  }
+
+  .service-card:hover .service-index {
+    transform: none;
+  }
+
+  .service-aura {
+    animation: none;
   }
 }

@@ -8,10 +8,13 @@ const siteHeader = document.querySelector(".site-header");
 const themeToggle = document.getElementById("theme-toggle");
 const contactForm = document.getElementById("contact-form");
 const formStatus = document.getElementById("form-status");
+const contactEmailLink = document.getElementById("contact-email-link");
 const yearElement = document.getElementById("current-year");
 const THEME_STORAGE_KEY = "rk-theme";
 const CONTACT_EMAIL = "techranjitad@gmail.com";
 const CONTACT_API_URL = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MOBILE_PATTERN = /^\+?[1-9]\d{6,14}$/;
 let activeSectionId = null;
 
 const parseJsonSafe = async (response) => {
@@ -20,6 +23,20 @@ const parseJsonSafe = async (response) => {
   } catch (error) {
     return {};
   }
+};
+
+const normalizeMobile = (mobile) => mobile.replace(/[\s()-]/g, "");
+
+const buildGmailComposeUrl = (toEmail, subject, body) => {
+  const query = new URLSearchParams({
+    view: "cm",
+    fs: "1",
+    to: toEmail,
+    su: subject,
+    body,
+  });
+
+  return `https://mail.google.com/mail/?${query.toString()}`;
 };
 
 const getScrollOffset = () => {
@@ -116,7 +133,15 @@ const saveTheme = (theme) => {
   }
 };
 
-applyTheme(readSavedTheme() === "dark" ? "dark" : "light");
+const getInitialTheme = () => {
+  const savedTheme = readSavedTheme();
+  if (savedTheme === "light" || savedTheme === "dark") {
+    return savedTheme;
+  }
+  return "dark";
+};
+
+applyTheme(getInitialTheme());
 
 if (yearElement) {
   yearElement.textContent = String(new Date().getFullYear());
@@ -209,6 +234,18 @@ if (themeToggle) {
   });
 }
 
+if (contactEmailLink) {
+  contactEmailLink.addEventListener("click", (event) => {
+    event.preventDefault();
+    const composeUrl = buildGmailComposeUrl(
+      CONTACT_EMAIL,
+      "Portfolio Inquiry",
+      "Hello Ranjeet,\n\nI would like to discuss a project."
+    );
+    window.location.href = composeUrl;
+  });
+}
+
 if (contactForm && formStatus) {
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -224,12 +261,28 @@ if (contactForm && formStatus) {
 
     const nameField = contactForm.querySelector("#name");
     const emailField = contactForm.querySelector("#email");
+    const mobileField = contactForm.querySelector("#mobile");
     const messageField = contactForm.querySelector("#message");
     const submitButton = contactForm.querySelector('button[type="submit"]');
 
     const senderName = nameField && nameField.value.trim() ? nameField.value.trim() : "there";
     const senderEmail = emailField && emailField.value.trim() ? emailField.value.trim() : "";
+    const senderMobile = mobileField && mobileField.value.trim() ? mobileField.value.trim() : "";
+    const normalizedMobile = normalizeMobile(senderMobile);
     const senderMessage = messageField && messageField.value.trim() ? messageField.value.trim() : "";
+
+    if (!EMAIL_PATTERN.test(senderEmail)) {
+      formStatus.textContent = "Please enter a valid email address.";
+      formStatus.classList.add("error");
+      return;
+    }
+
+    if (!MOBILE_PATTERN.test(normalizedMobile)) {
+      formStatus.textContent =
+        "Please enter a valid mobile number (7 to 15 digits, optional +country code).";
+      formStatus.classList.add("error");
+      return;
+    }
 
     if (submitButton) {
       submitButton.disabled = true;
@@ -249,8 +302,11 @@ if (contactForm && formStatus) {
         body: JSON.stringify({
           name: senderName,
           email: senderEmail,
+          mobile: normalizedMobile,
+          phone: normalizedMobile,
           message: senderMessage,
           _subject: `Portfolio Contact: ${senderName}`,
+          _replyto: senderEmail,
           _template: "table",
           _captcha: "false",
         }),
