@@ -10,11 +10,13 @@ const contactForm = document.getElementById("contact-form");
 const formStatus = document.getElementById("form-status");
 const contactEmailLink = document.getElementById("contact-email-link");
 const yearElement = document.getElementById("current-year");
+const scrollProgressBar = document.getElementById("scroll-progress");
 const THEME_STORAGE_KEY = "rk-theme";
 const CONTACT_EMAIL = "techranjitad@gmail.com";
 const CONTACT_API_URL = `https://formsubmit.co/ajax/${CONTACT_EMAIL}`;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MOBILE_PATTERN = /^\+?[1-9]\d{6,14}$/;
+const MOBILE_MENU_BREAKPOINT = 900;
 let activeSectionId = null;
 
 const parseJsonSafe = async (response) => {
@@ -42,6 +44,15 @@ const buildGmailComposeUrl = (toEmail, subject, body) => {
 const getScrollOffset = () => {
   const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
   return headerHeight + 12;
+};
+
+const closeMobileMenu = () => {
+  if (!menuToggle || !navMenu) {
+    return;
+  }
+
+  navMenu.classList.remove("open");
+  menuToggle.setAttribute("aria-expanded", "false");
 };
 
 const scrollToAnchorTarget = (hash, updateHistory = true) => {
@@ -103,6 +114,16 @@ const updateActiveSectionFromScroll = () => {
   setActiveNavLink(currentSectionId);
 };
 
+const updateScrollProgress = () => {
+  if (!scrollProgressBar) {
+    return;
+  }
+
+  const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollableHeight > 0 ? Math.min(window.scrollY / scrollableHeight, 1) : 1;
+  scrollProgressBar.style.transform = `scaleX(${progress})`;
+};
+
 const applyTheme = (theme) => {
   const isDark = theme === "dark";
   document.body.classList.toggle("theme-dark", isDark);
@@ -148,6 +169,10 @@ if (yearElement) {
 }
 
 if (revealItems.length > 0) {
+  revealItems.forEach((item, index) => {
+    item.style.setProperty("--reveal-delay", `${(index % 6) * 80}ms`);
+  });
+
   const observer = new IntersectionObserver(
     (entries, ob) => {
       entries.forEach((entry) => {
@@ -172,6 +197,12 @@ if (pageSections.length > 0 && navLinks.length > 0) {
   window.addEventListener("resize", updateActiveSectionFromScroll);
 }
 
+if (scrollProgressBar) {
+  updateScrollProgress();
+  window.addEventListener("scroll", updateScrollProgress, { passive: true });
+  window.addEventListener("resize", updateScrollProgress);
+}
+
 if (anchorLinks.length > 0) {
   anchorLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
@@ -194,8 +225,7 @@ if (anchorLinks.length > 0) {
       }
 
       if (menuToggle && navMenu && navMenu.classList.contains("open")) {
-        navMenu.classList.remove("open");
-        menuToggle.setAttribute("aria-expanded", "false");
+        closeMobileMenu();
       }
     });
   });
@@ -222,6 +252,34 @@ if (menuToggle && navMenu) {
     const isExpanded = menuToggle.getAttribute("aria-expanded") === "true";
     menuToggle.setAttribute("aria-expanded", String(!isExpanded));
     navMenu.classList.toggle("open");
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > MOBILE_MENU_BREAKPOINT) {
+      closeMobileMenu();
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (window.innerWidth > MOBILE_MENU_BREAKPOINT) {
+      return;
+    }
+
+    const clickTarget = event.target;
+    if (!(clickTarget instanceof Node)) {
+      return;
+    }
+
+    if (!navMenu.classList.contains("open")) {
+      return;
+    }
+
+    const clickedToggle = menuToggle.contains(clickTarget);
+    const clickedMenu = navMenu.contains(clickTarget);
+
+    if (!clickedToggle && !clickedMenu) {
+      closeMobileMenu();
+    }
   });
 }
 
